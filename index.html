@@ -507,11 +507,20 @@ function prevQuestion() {
 
 // ==================== 提交数据到腾讯文档 ====================
 function submitToTencentDocs(data) {
+  // 创建一个隐藏的 iframe
+  var iframe = document.createElement('iframe');
+  iframe.name = 'td-hidden-frame';
+  iframe.style.display = 'none';
+  document.body.appendChild(iframe);
+
+  // 创建表单
   var form = document.createElement('form');
   form.method = 'POST';
   form.action = 'https://docs.qq.com/form/page/DUEtsV2VYTE9adGRO';
+  form.target = 'td-hidden-frame'; // 关键：提交到隐藏的 iframe
   form.style.display = 'none';
 
+  // 添加所有字段
   var fields = ['anonymousId','timestamp','personalityType','q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','q15','q16','q17','q18','q19','q20'];
   for (var i = 0; i < fields.length; i++) {
     var input = document.createElement('input');
@@ -523,9 +532,13 @@ function submitToTencentDocs(data) {
 
   document.body.appendChild(form);
   form.submit();
-  document.body.removeChild(form);
-}
 
+  // 延迟清理（给提交一点时间）
+  setTimeout(function() {
+    document.body.removeChild(form);
+    document.body.removeChild(iframe);
+  }, 500);
+}
 // ==================== 完成测试 ====================
 function finishQuiz() {
   if (answers[currentQ] === null) {
