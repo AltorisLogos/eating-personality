@@ -1,253 +1,124 @@
 <!DOCTYPE html>
 <html lang="zh-CN">
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
-<title>大学生吃饭人格测试</title>
-<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
-<style>
-:root {
-  --bg: #FEF9F2;
-  --primary: #FF6B6B;
-  --secondary: #4ECDC4;
-  --card: #FFFFFF;
-  --text: #2D3436;
-  --muted: #B2BEC3;
-  --btn-default: #F1F2F6;
-  --shadow: 0 4px 20px rgba(0,0,0,0.06);
-  --radius: 16px;
-  --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
-}
-* { margin:0; padding:0; box-sizing:border-box; }
-body {
-  font-family: var(--font);
-  background: var(--bg);
-  color: var(--text);
-  min-height: 100vh;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 16px;
-  -webkit-tap-highlight-color: transparent;
-  user-select: none;
-}
-.container {
-  width: 100%;
-  max-width: 420px;
-  background: var(--card);
-  border-radius: var(--radius);
-  box-shadow: var(--shadow);
-  padding: 32px 24px;
-  position: relative;
-  overflow: hidden;
-  min-height: 500px;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-}
-.slide {
-  display: none;
-  flex-direction: column;
-  align-items: center;
-  text-align: center;
-  animation: fadeInRight 0.3s ease;
-}
-.slide.active {
-  display: flex;
-}
-@keyframes fadeInRight {
-  from { opacity:0; transform:translateX(30px); }
-  to { opacity:1; transform:translateX(0); }
-}
-@keyframes fadeUp {
-  from { opacity:0; transform:translateY(20px); }
-  to { opacity:1; transform:translateY(0); }
-}
-.fade-up {
-  animation: fadeUp 0.4s ease forwards;
-  opacity: 0;
-}
-.btn {
-  display: inline-block;
-  padding: 14px 32px;
-  border-radius: 50px;
-  font-size: 17px;
-  font-weight: 600;
-  cursor: pointer;
-  border: none;
-  transition: all 0.2s ease;
-  font-family: var(--font);
-  -webkit-appearance: none;
-}
-.btn-primary {
-  background: var(--primary);
-  color: #fff;
-  box-shadow: 0 6px 20px rgba(255,107,107,0.3);
-}
-.btn-primary:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(255,107,107,0.35); }
-.btn-outline {
-  background: transparent;
-  color: var(--primary);
-  border: 2px solid var(--primary);
-}
-.btn-outline:hover { background: rgba(255,107,107,0.05); }
-.progress-wrap {
-  width: 100%;
-  margin-bottom: 24px;
-}
-.progress-text {
-  font-size: 12px;
-  color: var(--muted);
-  margin-bottom: 6px;
-  text-align: center;
-}
-.progress-bar {
-  width: 100%;
-  height: 8px;
-  background: var(--btn-default);
-  border-radius: 10px;
-  overflow: hidden;
-}
-.progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, var(--primary), var(--secondary));
-  border-radius: 10px;
-  transition: width 0.3s ease;
-}
-.badge-section {
-  font-size: 13px;
-  color: var(--primary);
-  font-weight: 600;
-  margin-bottom: 8px;
-}
-.q-title {
-  font-size: 18px;
-  font-weight: 600;
-  margin-bottom: 24px;
-  line-height: 1.5;
-  color: var(--text);
-}
-.options {
-  width: 100%;
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-  margin-bottom: 24px;
-}
-.opt-btn {
-  width: 100%;
-  padding: 14px 16px;
-  border-radius: 12px;
-  border: none;
-  font-size: 15px;
-  cursor: pointer;
-  background: var(--btn-default);
-  color: var(--text);
-  text-align: left;
-  transition: all 0.2s ease;
-  font-family: var(--font);
-  -webkit-appearance: none;
-  min-height: 48px;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-.opt-btn:hover { filter: brightness(0.96); }
-.opt-btn.selected {
-  background: var(--primary);
-  color: #fff;
-  font-weight: 600;
-  transform: scale(1.02);
-}
-.opt-btn.selected::after {
-  content: '✓';
-  margin-left: auto;
-  font-size: 18px;
-}
-.nav-row {
-  display: flex;
-  width: 100%;
-  gap: 12px;
-  justify-content: space-between;
-}
-.nav-row .btn { flex:1; }
-.start-emoji { font-size: 64px; margin-bottom: 16px; }
-.start-title {
-  font-size: 28px;
-  font-weight: 800;
-  background: linear-gradient(135deg, var(--primary), #e55b5b);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-  margin-bottom: 8px;
-}
-.start-subtitle { font-size: 16px; color: var(--muted); margin-bottom: 16px; }
-.start-badges {
-  display: flex;
-  gap: 16px;
-  margin-bottom: 28px;
-  font-size: 13px;
-  color: var(--muted);
-}
-.start-badges span { display:flex; align-items:center; gap:4px; }
-.start-footer { font-size: 11px; color: var(--muted); margin-top: 20px; }
-.result-emoji { font-size: 56px; margin-bottom: 8px; }
-.result-name-cn { font-size: 26px; font-weight: 800; color: var(--text); }
-.result-name-en { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 20px; }
-.bar-chart { width: 100%; margin-bottom: 20px; }
-.bar-row { display:flex; align-items:center; margin-bottom:10px; gap:10px; }
-.bar-label { width: 80px; font-size: 13px; text-align: right; flex-shrink: 0; }
-.bar-track { flex:1; height:12px; background:var(--btn-default); border-radius:10px; overflow:hidden; }
-.bar-inner { height:100%; border-radius:10px; transition:width 0.8s ease; }
-.bar-score { width: 50px; font-size: 13px; font-weight: 600; text-align: left; flex-shrink: 0; }
-.card-desc, .card-advice {
-  background: var(--bg);
-  border-radius: 12px;
-  padding: 16px;
-  text-align: left;
-  line-height: 1.7;
-  font-size: 14px;
-  margin-bottom: 12px;
-  width: 100%;
-}
-.card-advice { background: rgba(78,205,196,0.08); }
-.card-advice strong { color: var(--secondary); }
-.btn-row { display:flex; width:100%; gap:12px; margin-top:8px; }
-.btn-row .btn { flex:1; font-size:14px; padding:12px; }
-.muted-note { font-size: 11px; color: var(--muted); margin-top: 4px; text-align: left; }
-.privacy-badge { display:inline-block; background:var(--btn-default); color:var(--muted); font-size:11px; padding:2px 8px; border-radius:20px; margin-left:8px; }
-#share-card {
-  position: absolute;
-  left: -9999px;
-  top: 0;
-  width: 375px;
-  background: #fff;
-  padding: 24px 20px;
-  border-radius: 16px;
-  box-shadow: var(--shadow);
-  text-align: center;
-  font-family: var(--font);
-  color: var(--text);
-}
-#share-card .share-title { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
-#share-card .share-emoji { font-size: 48px; margin-bottom: 4px; }
-#share-card .share-name { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
-#share-card .bar-row { gap:6px; margin-bottom:6px; }
-#share-card .bar-label { font-size:11px; width:65px; }
-#share-card .bar-track { height:10px; }
-#share-card .bar-score { font-size:11px; width:40px; }
-#share-card .share-desc, #share-card .share-advice { font-size:13px; line-height:1.6; text-align:left; margin-top:8px; }
-#share-card .share-advice { color: var(--primary); font-size:12px; }
-#share-card .qr-wrap { margin-top:16px; }
-#share-card .qr-wrap img { width:80px; height:80px; border-radius:8px; border:2px solid var(--btn-default); }
-#share-card .qr-label { font-size:10px; color:var(--muted); margin-top:4px; }
-.result-desc, .share-desc, .share-advice { white-space: pre-line; }
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no, viewport-fit=cover">
+  <title>大学生吃饭人格测试</title>
+  <!-- 引入html2canvas库 -->
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    /* ========== 全局样式 ========== */
+    :root {
+      --bg: #FEF9F2;
+      --primary: #FF6B6B;
+      --secondary: #4ECDC4;
+      --card: #FFFFFF;
+      --text: #2D3436;
+      --muted: #B2BEC3;
+      --btn-default: #F1F2F6;
+      --shadow: 0 4px 20px rgba(0,0,0,0.06);
+      --radius: 16px;
+      --font: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+    }
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    body {
+      font-family: var(--font);
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      padding: 16px;
+      -webkit-tap-highlight-color: transparent;
+      user-select: none;
+    }
+    .container {
+      width: 100%;
+      max-width: 420px;
+      background: var(--card);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      padding: 32px 24px;
+      position: relative;
+      overflow: hidden;
+      min-height: 500px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+    }
+    .slide { display: none; flex-direction: column; align-items: center; text-align: center; animation: fadeInRight 0.3s ease; }
+    .slide.active { display: flex; }
+    @keyframes fadeInRight { from { opacity: 0; transform: translateX(30px); } to { opacity: 1; transform: translateX(0); } }
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(20px); } to { opacity: 1; transform: translateY(0); } }
+    .fade-up { animation: fadeUp 0.4s ease forwards; opacity: 0; }
+    .btn {
+      display: inline-block; padding: 14px 32px; border-radius: 50px; font-size: 17px; font-weight: 600;
+      cursor: pointer; border: none; transition: all 0.2s ease; font-family: var(--font);
+    }
+    .btn-primary { background: var(--primary); color: #fff; box-shadow: 0 6px 20px rgba(255,107,107,0.3); }
+    .btn-primary:hover { transform: scale(1.03); box-shadow: 0 8px 24px rgba(255,107,107,0.35); }
+    .btn-outline { background: transparent; color: var(--primary); border: 2px solid var(--primary); }
+    .btn-outline:hover { background: rgba(255,107,107,0.05); }
+    .start-emoji { font-size: 64px; margin-bottom: 16px; }
+    .start-title { font-size: 28px; font-weight: 800; background: linear-gradient(135deg, var(--primary), #e55b5b); -webkit-background-clip: text; -webkit-text-fill-color: transparent; margin-bottom: 8px; }
+    .start-subtitle { font-size: 16px; color: var(--muted); margin-bottom: 16px; }
+    .start-badges { display: flex; gap: 16px; margin-bottom: 28px; font-size: 13px; color: var(--muted); }
+    .start-footer { font-size: 11px; color: var(--muted); margin-top: 28px; }
+    .progress-wrap { width: 100%; margin-bottom: 24px; }
+    .progress-text { font-size: 12px; color: var(--muted); margin-bottom: 6px; text-align: center; }
+    .progress-bar { width: 100%; height: 8px; background: var(--btn-default); border-radius: 10px; overflow: hidden; }
+    .progress-fill { height: 100%; background: linear-gradient(90deg, var(--primary), var(--secondary)); border-radius: 10px; transition: width 0.3s ease; }
+    .badge-section { font-size: 13px; color: var(--primary); font-weight: 600; margin-bottom: 8px; }
+    .q-title { font-size: 18px; font-weight: 600; margin-bottom: 24px; line-height: 1.5; }
+    .options { width: 100%; display: flex; flex-direction: column; gap: 10px; margin-bottom: 24px; }
+    .opt-btn {
+      width: 100%; padding: 14px 16px; border-radius: 12px; border: none; font-size: 15px; cursor: pointer;
+      background: var(--btn-default); color: var(--text); text-align: left; transition: all 0.2s ease;
+      font-family: var(--font); min-height: 48px; display: flex; align-items: center; gap: 10px;
+    }
+    .opt-btn:hover { filter: brightness(0.96); }
+    .opt-btn.selected { background: var(--primary); color: #fff; font-weight: 600; transform: scale(1.02); }
+    .opt-btn.selected::after { content: '✓'; margin-left: auto; font-size: 18px; }
+    .nav-row { display: flex; width: 100%; gap: 12px; justify-content: space-between; }
+    .muted-note { font-size: 11px; color: var(--muted); margin-top: 4px; text-align: left; }
+    .privacy-badge { display: inline-block; background: var(--btn-default); color: var(--muted); font-size: 11px; padding: 2px 8px; border-radius: 20px; margin-left: 8px; }
+    .result-emoji { font-size: 56px; margin-bottom: 8px; }
+    .result-name-cn { font-size: 26px; font-weight: 800; }
+    .result-name-en { font-size: 14px; color: var(--muted); font-style: italic; margin-bottom: 20px; }
+    .bar-chart { width: 100%; margin-bottom: 20px; }
+    .bar-row { display: flex; align-items: center; margin-bottom: 10px; gap: 10px; }
+    .bar-label { width: 80px; font-size: 13px; text-align: right; flex-shrink: 0; }
+    .bar-track { flex: 1; height: 12px; background: var(--btn-default); border-radius: 10px; overflow: hidden; }
+    .bar-inner { height: 100%; border-radius: 10px; transition: width 0.8s ease; }
+    .bar-score { width: 50px; font-size: 13px; font-weight: 600; text-align: left; flex-shrink: 0; }
+    .card-desc, .card-advice {
+      background: var(--bg); border-radius: 12px; padding: 16px; text-align: left;
+      line-height: 1.7; font-size: 14px; margin-bottom: 12px; width: 100%;
+    }
+    .card-advice { background: rgba(78,205,196,0.08); }
+    .btn-row { display: flex; width: 100%; gap: 12px; margin-top: 16px; }
+    .btn-row .btn { flex: 1; font-size: 14px; padding: 12px; }
+    #share-card {
+      position: absolute; left: -9999px; top: 0; width: 375px; background: #fff;
+      padding: 24px 20px; border-radius: 16px; box-shadow: var(--shadow);
+      text-align: center; font-family: var(--font); color: var(--text);
+    }
+    .share-title { font-size: 20px; font-weight: 800; color: var(--primary); margin-bottom: 12px; }
+    .share-emoji { font-size: 48px; margin-bottom: 4px; }
+    .share-name { font-size: 22px; font-weight: 800; margin-bottom: 16px; }
+    .share-desc, .share-advice { font-size: 13px; line-height: 1.6; text-align: left; margin-top: 12px; }
+    .qr-wrap { margin-top: 16px; }
+    .qr-wrap img { width: 80px; height: 80px; border-radius: 8px; border: 2px solid var(--btn-default); }
+    .qr-label { font-size: 10px; color: var(--muted); margin-top: 4px; }
+    .result-desc, .share-desc, .share-advice { white-space: pre-line; }
 
-@media (max-width: 374px) {
-  .container { padding: 24px 16px; }
-  .start-title { font-size: 24px; }
-  .q-title { font-size: 16px; }
-}
-</style>
+    @media (max-width: 374px) {
+      .container { padding: 24px 16px; }
+      .start-title { font-size: 24px; }
+      .q-title { font-size: 16px; }
+    }
+  </style>
 </head>
 <body>
 <div class="container" id="app">
@@ -266,7 +137,7 @@ body {
     <div class="start-footer">本测试为学术研究用途，数据严格保密。</div>
   </div>
 
-  <!-- ==================== 题目区域（由JS动态渲染） ==================== -->
+  <!-- ==================== 题目区域 (由JS动态渲染) ==================== -->
   <div class="slide" id="question-slide"></div>
 
   <!-- ==================== 计算中 ==================== -->
@@ -292,7 +163,7 @@ body {
 
 </div>
 
-<!-- ==================== 分享卡片（隐藏，用于截图） ==================== -->
+<!-- ==================== 分享卡片 (隐藏，用于截图) ==================== -->
 <div id="share-card">
   <div class="share-title">大学生吃饭人格测试</div>
   <div class="share-emoji" id="share-emoji"></div>
@@ -323,32 +194,25 @@ var sections = [
 ];
 
 var questions = [
-  // Q1-Q4 压力感知
   { title:'在最近一次考试期间，你感受到的压力程度是？', opts:['1 — 几乎没有压力','2 — 轻微压力','3 — 中等压力','4 — 较大压力','5 — 非常大压力'] },
   { title:'考试期间，你有多频繁地因为学习任务而感到时间不够用？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
   { title:'考试期间，你是否容易出现头痛、胃部不适或失眠等身体反应？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
   { title:'考试周结束后，你通常需要多久才能恢复到正常的心理状态？', opts:['1 — 当天就恢复','2 — 一两天','3 — 三四天','4 — 将近一周','5 — 需要一周以上'] },
-  // Q5-Q8 饮食变化
   { title:'与没有考试的时期相比，你在考试期间每天的进餐次数发生了什么变化？', opts:['1 — 明显增加','2 — 略有增加','3 — 基本不变','4 — 略有减少','5 — 明显减少'] },
   { title:'考试期间，你吃蔬菜和水果的频率与平时相比如何？', opts:['1 — 明显增加','2 — 略有增加','3 — 基本不变','4 — 略有减少','5 — 明显减少'] },
   { title:'考试期间，你吃快餐、方便面或外卖的频率与平时相比如何？', opts:['1 — 明显减少','2 — 略有减少','3 — 基本不变','4 — 略有增加','5 — 明显增加'] },
   { title:'考试期间，你吃甜食或含糖饮料的频率与平时相比如何？', opts:['1 — 明显减少','2 — 略有减少','3 — 基本不变','4 — 略有增加','5 — 明显增加'] },
-  // Q9-Q12 情绪与进食
   { title:'当你感到紧张或焦虑时，会不自觉地想吃东西吗？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
   { title:'考试期间感到烦躁时，吃东西能让你平静下来吗？', opts:['1 — 完全不会','2 — 偶尔可以','3 — 有时可以','4 — 经常可以','5 — 几乎每次都会'] },
   { title:'即使不饿，看到或闻到喜欢的食物，你也很难忍住不吃吗？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
   { title:'在图书馆或自习室看到别人吃东西，你也会想去买点什么吃吗？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
-  // Q13-Q16 自我调控
   { title:'面对困难或挫折时，你通常能多快调整好自己的情绪状态？', opts:['1 — 非常慢','2 — 比较慢','3 — 一般','4 — 比较快','5 — 非常快'] },
   { title:'考试期间，你会有意识地提醒自己按时吃饭吗？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
   { title:'考试期间，你会有意识地选择相对健康的食物吗？', opts:['1 — 从不','2 — 很少','3 — 有时','4 — 经常','5 — 总是'] },
   { title:'当你发现自己在压力下吃得太多或太少时，你能主动调整回来吗？', opts:['1 — 完全不能','2 — 比较难','3 — 有时可以','4 — 通常可以','5 — 完全可以'] },
-  // Q17-Q18 日常活动
   { title:'考试期间，你平均每天坐着学习的时间大约是？', opts:['1 — 少于 4 小时','2 — 4-6 小时','3 — 6-8 小时','4 — 8-10 小时','5 — 超过 10 小时'] },
   { title:'考试期间，你进行体育锻炼的频率与平时相比如何？', opts:['1 — 明显增加','2 — 略有增加','3 — 基本不变','4 — 略有减少','5 — 明显减少'] },
-  // Q19 性别
   { title:'你的性别是？', opts:['A. 男','B. 女'], isDemo:true, hint:'我们收集性别信息仅用于分析不同群体的饮食应对模式是否存在差异，你的回答将被严格保密。' },
-  // Q20 年级
   { title:'你目前所在的年级是？', opts:['A. 大一','B. 大二','C. 大三','D. 大四及以上'], isDemo:true, hint:'了解年级分布有助于我们比较不同学业阶段学生的压力与饮食特征。' }
 ];
 
@@ -356,27 +220,27 @@ var questions = [
 var typeData = {
   'High-High-Low': {
     cn:'暴风吸入型', en:'Stress Snacker', emoji:'🔴',
-    d:'你对待食物的方式，就像古希腊人对待命运——明知不可为，但最后往往必然为之。你一焦虑就忍不住想往嘴里塞点东西，甜的油的来者不拒。你很清楚那袋薯片吃完会后悔，那杯奶茶喝完会后悔，但在考试的重压下，你的意志力就像一根绷紧的小提琴琴弦，再承受一点压力可能就会崩溃。于是你化身休谟："理性是，并且也应当是激情的奴隶。"吃吧，让我们把焦虑和知识一起咽下去。当然，你也不是每时每刻都在惦记美食。偶尔在极度紧张的考场上，你也会短暂地失去胃口。但考完之后，食欲就会带着报复性地热情卷土重来。你优秀地继承了老资历们的自然生存法则。对你来说，吃是应对压力的本能反应。',
+    d:'你对待食物的方式，就像古希腊人对待命运——明知不可为，但最后往往必然为之。你一焦虑就忍不住想往嘴里塞点东西，甜的油的来者不拒。你很清楚那袋薯片吃完会后悔，那杯奶茶喝完会后悔，但在考试的重压下，你的意志力就像一根绷紧的小提琴琴弦，再承受一点压力可能就会崩溃。于是你化身休谟：“理性是，并且也应当是激情的奴隶。”吃吧，让我们把焦虑和知识一起咽下去。当然，你也不是每时每刻都在惦记美食。偶尔在极度紧张的考场上，你也会短暂地失去胃口。但考完之后，食欲就会带着报复性地热情卷土重来。你优秀地继承了老资历们的自然生存法则。对你来说，吃是应对压力的本能反应。',
     a:'你的食欲容易在压力下失控，但这不是意志力的问题，而是你的身体在寻求安慰。可以试着在考试周备一些相对健康的零食放在手边，如坚果、果干，用它们替代高糖高油的食物。同时留意自己是真的饿了，还是只是在缓解情绪。'
   },
   'High-High-High': {
     cn:'深夜忏悔型', en:'Midnight Regretter', emoji:'🟠',
-    d:'你是斯多亚学派最忠实的信徒——至少在白天是。你在图书馆和教室里像一位苦修的贤者，对零食视而不见，持续隐忍。但结束一天的疲惫后，到了晚上，你终究绷不住了。尤其在离开图书馆、回宿舍的途中。于是你就带着一种近乎宗教式的负罪感破了戒。每当你吃饭时，你都在和自己的欲望进行一场永无止境的拉锯战。有趣的是，在白天你绷得太紧的时候，常常一整天都不想吃饭，甚至是废寝忘食到"一忙就忘了吃饭"的地步。直到晚上你完成了今天给自己设定的DDL，你的胃终于发出了它的抗议。',
+    d:'你是斯多亚学派最忠实的信徒——至少在白天是。你在图书馆和教室里像一位苦修的贤者，对零食视而不见，持续隐忍。但结束一天的疲惫后，到了晚上，你终究绷不住了。尤其在离开图书馆、回宿舍的途中。于是你就带着一种近乎宗教式的负罪感破了戒。每当你吃饭时，你都在和自己的欲望进行一场永无止境的拉锯战。有趣的是，在白天你绷得太紧的时候，常常一整天都不想吃饭，甚至是废寝忘食到“一忙就忘了吃饭”的地步。直到晚上你完成了今天给自己设定的DDL，你的胃终于发出了它的抗议。',
     a:'你的饮食习惯很容易受压力影响，但你有自我管理的意识。你可以尝试在白天安排固定的加餐时间，避免忍到深夜。如果白天感到饥饿，就正常进食，切忌饥一顿饱一顿，不然长期下来容易胃疼。如果晚上确实饿了，提前准备好低热量的夜宵选项。与其吃完再懊悔，不如把懊悔的能量用在提前准备上。'
   },
   'High-Low-Low': {
     cn:'压力厌食型', en:'Stress Starver', emoji:'🟡',
-    d:'"我思故我在。"——笛卡尔\n"我焦虑故我不饿。"——你\n你的胃似乎先于你的大脑理解了某种存在主义的荒诞：如果我要忙于一场意义不明的考试，吃饭又有什么意义呢？一碗泡面摆在你面前，你看着它，它看着你，仿佛你们之间已经隔了一层可悲的厚障壁。你抬起筷子，吃一口，却不想再吃第二口了，因为你此刻真的几乎感受不到饥饿。于是你跳过一餐又一餐，放任你的胃口和心情一起消失。',
+    d:'“我思故我在。”——笛卡尔\n“我焦虑故我不饿。”——你\n你的胃似乎先于你的大脑理解了某种存在主义的荒诞：如果我要忙于一场意义不明的考试，吃饭又有什么意义呢？一碗泡面摆在你面前，你看着它，它看着你，仿佛你们之间已经隔了一层可悲的厚障壁。你抬起筷子，吃一口，却不想再吃第二口了，因为你此刻真的几乎感受不到饥饿。于是你跳过一餐又一餐，放任你的胃口和心情一起消失。',
     a:'你终究不是只靠大脑自行运作的永动机。偶尔也停下来吃一口吧，哪怕萨特也会喝杯咖啡的。即使不饿，你也最好尽量定时进食，可以选一些清淡易入口的东西，比如粥、酸奶或水果。如果有必要，可以设置闹钟提醒自己吃饭，把进食当作恢复精力的一部分。'
   },
   'High-Low-High': {
     cn:'战术补给型', en:'Strategic Eater', emoji:'🟢',
-    d:'与很多人不同，你并不把进食视为"享受"。你把考试当成作战，而把吃饭当成补给。你很少因为情绪波动而改变饮食计划，因为你的理性告诉你，身体的稳定性的思维清晰的前提。考试的压力确实大，但这对你而言只是变成了一个需要考虑的变量。你会有意识地定时吃饭、选你认为相对健康的食物，甚至提前准备。今天要长时间复习，那早餐就多吃点蛋白；明天要上考场，那就整点儿低GI碳水防止晕碳。斯多亚学派说"控制你能控制的，接受你不能控制的"，而你就是这一观点的践行者——或许你无法控制试题难度，但你至少可以主动干预自己的血糖曲线。',
-    a:'你已经做得很好了。你可以考虑提前规划考试周的餐单，简化饮食决策，询问AI获得参考意见，避免因为思考"吃什么"而消耗过多精力。如果偶尔产生了对某种美食的食欲，也不妨顺从自己的胃。你的策略是理性而有效的，可以继续坚持下去。'
+    d:'与很多人不同，你并不把进食视为“享受”。你把考试当成作战，而把吃饭当成补给。你很少因为情绪波动而改变饮食计划，因为你的理性告诉你，身体的稳定性的思维清晰的前提。考试的压力确实大，但这对你而言只是变成了一个需要考虑的变量。你会有意识地定时吃饭、选你认为相对健康的食物，甚至提前准备。今天要长时间复习，那早餐就多吃点蛋白；明天要上考场，那就整点儿低GI碳水防止晕碳。斯多亚学派说“控制你能控制的，接受你不能控制的”，而你就是这一观点的践行者——或许你无法控制试题难度，但你至少可以主动干预自己的血糖曲线。',
+    a:'你已经做得很好了。你可以考虑提前规划考试周的餐单，简化饮食决策，询问AI获得参考意见，避免因为思考“吃什么”而消耗过多精力。如果偶尔产生了对某种美食的食欲，也不妨顺从自己的胃。你的策略是理性而有效的，可以继续坚持下去。'
   },
   'Low-High-Low': {
     cn:'快乐干饭型', en:'Food Lover', emoji:'🔵',
-    d:'你是伊壁鸠鲁的知己。你深谙一个朴素的真理：快乐是生活的底色，而进食是获得快乐的捷径，生活的意义就是去码头整点儿薯条。吃饭这件事对你来说本来就很重要，跟考不考试关系不大。你容易被美食吸引，情绪也会带动你的食欲。人生苦短，趁热吃饭。一个连吃都提不起劲的人，又怎么能对知识保持真正的热情呢？当然，偶尔极度焦虑时你也会吃不太下，但这通常很短，以至于不足以被你视为"厌食"。',
+    d:'你是伊壁鸠鲁的知己。你深谙一个朴素的真理：快乐是生活的底色，而进食是获得快乐的捷径，生活的意义就是去码头整点儿薯条。吃饭这件事对你来说本来就很重要，跟考不考试关系不大。你容易被美食吸引，情绪也会带动你的食欲。人生苦短，趁热吃饭。一个连吃都提不起劲的人，又怎么能对知识保持真正的热情呢？当然，偶尔极度焦虑时你也会吃不太下，但这通常很短，以至于不足以被你视为“厌食”。',
     a:'吃对你来说是享受，这本身不是问题。但如果你对此产生焦虑，可以试着在品鉴时留意一下：你是真的饿了，还是被情绪或环境带动了？试着在开心吃之前停顿几秒，问问自己身体的需求，这样吃会更满足也更健康。'
   },
   'Low-High-High': {
@@ -386,294 +250,128 @@ var typeData = {
   },
   'Low-Low-Low': {
     cn:'随便对付型', en:'Whatever Eater', emoji:'⚪',
-    d:'"没有那种世俗的欲望🙏"\n在你的同学看来，你可能已经修到了某种六根清净的境界。你饿了就吃，不饿就不吃，有什么吃什么，不挑不拣，随遇而安。但与禅宗不同，你这种"自在"与其说是超脱，不如说是纯粹的实用主义。你可能会觉得：吃饭的时间省下来又能多背10个单词，或者哪怕是多看一会手机。考试期间你对吃这件事实在提不起兴趣，但这和考不考试无关，而是你对吃这件事本来就很佛。一旦投入到某件事情当中，你可能一整天都会忘记吃饭。胃对你而言只是一个需要燃料的容器，至于燃料嘛，饭不在香，能吃就行。',
-    a:'好消息是你几乎不会因饮食而焦虑，但也请注意：长期不规律饮食、跳餐少餐，这都会影响精力和注意力。可以试着从每天至少安排一顿营养均衡（也就是说至少应该有主食、蛋白质、蔬菜）的正餐开始，这不会"浪费"你太多时间，但能给身体稳定的能量支持。也可以尝试固定一个大致的进食时间，比如12:00吃午餐，18:00吃晚餐。另外，如果已经感到饥饿，一定不要刻意忍耐，该吃就吃，不然长期下来容易胃疼。'
+    d:'“没有那种世俗的欲望🙏”\n在你的同学看来，你可能已经修到了某种六根清净的境界。你饿了就吃，不饿就不吃，有什么吃什么，不挑不拣，随遇而安。但与禅宗不同，你这种“自在”与其说是超脱，不如说是纯粹的实用主义。你可能会觉得：吃饭的时间省下来又能多背10个单词，或者哪怕是多看一会手机。考试期间你对吃这件事实在提不起兴趣，但这和考不考试无关，而是你对吃这件事本来就很佛。一旦投入到某件事情当中，你可能一整天都会忘记吃饭。胃对你而言只是一个需要燃料的容器，至于燃料嘛，饭不在香，能吃就行。',
+    a:'好消息是你几乎不会因饮食而焦虑，但也请注意：长期不规律饮食、跳餐少餐，这都会影响精力和注意力。可以试着从每天至少安排一顿营养均衡（也就是说至少应该有主食、蛋白质、蔬菜）的正餐开始，这不会“浪费”你太多时间，但能给身体稳定的能量支持。也可以尝试固定一个大致的进食时间，比如12:00吃午餐，18:00吃晚餐。另外，如果已经感到饥饿，一定不要刻意忍耐，该吃就吃，不然长期下来容易胃疼。'
   },
   'Low-Low-High': {
     cn:'稳如泰山型', en:'Stress-Proof Eater', emoji:'🟤',
-    d:'不管考试多紧张，你的饮食节奏都几乎不受影响。你不是不焦虑，也不是没食欲，只是或许天生就比别人更擅长把"食欲"和"情绪"分开处理。你几乎不会因为情绪变化而暴食或厌食，也对自己的状态有稳定的掌控感。在饮食方面，你已经达到了斯多亚学派所梦寐以求的"不受外物扰动的内在安宁"境界。这种稳定性的源头你也说不清，亚里士多德说德性是一种习惯，或许你已经养成了。在同学们眼里，你可能就是那个"考完试还有心思给自己做饭"的人。',
+    d:'不管考试多紧张，你的饮食节奏都几乎不受影响。你不是不焦虑，也不是没食欲，只是或许天生就比别人更擅长把“食欲”和“情绪”分开处理。你几乎不会因为情绪变化而暴食或厌食，也对自己的状态有稳定的掌控感。在饮食方面，你已经达到了斯多亚学派所梦寐以求的“不受外物扰动的内在安宁”境界。这种稳定性的源头你也说不清，亚里士多德说德性是一种习惯，或许你已经养成了。在同学们眼里，你可能就是那个“考完试还有心思给自己做饭”的人。',
     a:'你能在压力下保持饮食稳定，这是一种宝贵的能力。或许你可以在朋友中分享自己的方法，帮助那些考试期间饮食紊乱的同学。你可以继续保持，你是难得的那一小部分人。'
   }
 };
 
 // ==================== 工具函数 ====================
-function generateRandomId() {
-  return 'user_' + Math.random().toString(36).substr(2, 8);
-}
-
-function getSection(qIndex) {
-  for (var i = 0; i < sections.length; i++) {
-    if (qIndex >= sections[i].start && qIndex < sections[i].end) return sections[i];
-  }
-  return null;
-}
-
-// ==================== 渲染 ====================
-function showSlide(id) {
-  document.querySelectorAll('.slide').forEach(function(s) { s.classList.remove('active'); });
-  document.getElementById(id).classList.add('active');
-}
-
-function startQuiz() {
-  currentQ = 0;
-  answers = new Array(20).fill(null);
-  renderQuestion();
-  showSlide('question-slide');
-}
-
-function restartQuiz() {
-  currentQ = 0;
-  answers = new Array(20).fill(null);
-  resultType = null;
-  startQuiz();
-}
+function generateRandomId() { return 'user_' + Math.random().toString(36).substr(2, 8); }
+function getSection(qIndex) { for (var i=0;i<sections.length;i++) { if (qIndex>=sections[i].start && qIndex<sections[i].end) return sections[i]; } return null; }
+function showSlide(id) { document.querySelectorAll('.slide').forEach(function(s){ s.classList.remove('active'); }); document.getElementById(id).classList.add('active'); }
+function startQuiz() { currentQ=0; answers=new Array(20).fill(null); renderQuestion(); showSlide('question-slide'); }
+function restartQuiz() { currentQ=0; answers=new Array(20).fill(null); resultType=null; startQuiz(); }
 
 function renderQuestion() {
-  var q = questions[currentQ];
-  var sec = getSection(currentQ);
-  var html = '';
-
-  // 进度条
-  html += '<div class="progress-wrap">';
-  html += '<div class="progress-text">第 ' + (currentQ+1) + ' / 20 题</div>';
-  html += '<div class="progress-bar"><div class="progress-fill" style="width:' + ((currentQ+1)/20*100) + '%;"></div></div>';
-  html += '</div>';
-
-  // 分区标签
-  if (sec && (currentQ === sec.start || (currentQ > sec.start && getSection(currentQ-1) !== sec))) {
-    html += '<div class="badge-section">' + sec.label + '</div>';
-  }
-  if (sec && currentQ === sec.start) {
-    html += '<div class="badge-section">' + sec.label + '</div>';
-  }
-
-  // 题目
-  html += '<div class="q-title">' + q.title;
-  if (q.isDemo) {
-    html += '<span class="privacy-badge">🔒 严格保密</span>';
-  }
-  html += '</div>';
-
-  // 选项
-  html += '<div class="options">';
-  for (var i = 0; i < q.opts.length; i++) {
-    var sel = answers[currentQ] === i ? ' selected' : '';
-    html += '<button class="opt-btn' + sel + '" onclick="selectOption(' + i + ')">' + q.opts[i] + '</button>';
-  }
-  html += '</div>';
-
-  // 提示文字
-  if (q.hint) {
-    html += '<div class="muted-note">' + q.hint + '</div>';
-  }
-
-  // 导航按钮
-  html += '<div class="nav-row">';
-  if (currentQ > 0) {
-    html += '<button class="btn btn-outline" onclick="prevQuestion()">上一题</button>';
-  }
-  if (currentQ < 19) {
-    html += '<button class="btn btn-primary" onclick="nextQuestion()" id="next-btn">下一题 →</button>';
-  } else {
-    html += '<button class="btn btn-primary" onclick="finishQuiz()" id="next-btn">查看结果 →</button>';
-  }
-  html += '</div>';
-
-  document.getElementById('question-slide').innerHTML = html;
+  var q=questions[currentQ]; var sec=getSection(currentQ); var html='';
+  html+='<div class="progress-wrap"><div class="progress-text">第 '+(currentQ+1)+' / 20 题</div><div class="progress-bar"><div class="progress-fill" style="width:'+((currentQ+1)/20*100)+'%;"></div></div></div>';
+  if (sec && currentQ===sec.start) html+='<div class="badge-section">'+sec.label+'</div>';
+  html+='<div class="q-title">'+q.title; if (q.isDemo) html+=' <span class="privacy-badge">🔒 严格保密</span>'; html+='</div>';
+  html+='<div class="options">';
+  for (var i=0;i<q.opts.length;i++) { var sel=answers[currentQ]===i?' selected':''; html+='<button class="opt-btn'+sel+'" onclick="selectOption('+i+')">'+q.opts[i]+'</button>'; }
+  html+='</div>';
+  if (q.hint) html+='<div class="muted-note">'+q.hint+'</div>';
+  html+='<div class="nav-row">';
+  if (currentQ>0) html+='<button class="btn btn-outline" onclick="prevQuestion()">上一题</button>';
+  if (currentQ<19) html+='<button class="btn btn-primary" onclick="nextQuestion()" id="next-btn">下一题 →</button>';
+  else html+='<button class="btn btn-primary" onclick="finishQuiz()" id="next-btn">查看结果 →</button>';
+  html+='</div>';
+  document.getElementById('question-slide').innerHTML=html;
 }
 
-function selectOption(idx) {
-  answers[currentQ] = idx;
-  renderQuestion();
-}
+function selectOption(idx) { answers[currentQ]=idx; renderQuestion(); }
+function nextQuestion() { if (answers[currentQ]===null) { alert('还有题目没答完喵'); return; } if (currentQ<19) { currentQ++; renderQuestion(); } }
+function prevQuestion() { if (currentQ>0) { currentQ--; renderQuestion(); } }
 
-function nextQuestion() {
-  if (answers[currentQ] === null) {
-    alert('还有题目没答完哦～');
-    return;
-  }
-  if (currentQ < 19) {
-    currentQ++;
-    renderQuestion();
-  }
-}
-
-function prevQuestion() {
-  if (currentQ > 0) {
-    currentQ--;
-    renderQuestion();
-  }
-}
-
-// ==================== 提交数据到腾讯文档 ====================
+// ==================== 数据发送到腾讯轻联 Webhook ====================
 function submitToTencentDocs(data) {
-  // 创建一个隐藏的 iframe
-  var iframe = document.createElement('iframe');
-  iframe.name = 'td-hidden-frame';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
-
-  // 创建表单
-  var form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://docs.qq.com/form/page/DUEtsV2VYTE9adGRO';
-  form.target = 'td-hidden-frame'; // 关键：提交到隐藏的 iframe
-  form.style.display = 'none';
-
-  // 添加所有字段
-  var fields = ['anonymousId','timestamp','personalityType','q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','q15','q16','q17','q18','q19','q20'];
-  for (var i = 0; i < fields.length; i++) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = fields[i];
-    input.value = data[fields[i]];
-    form.appendChild(input);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-
-  // 延迟清理（给提交一点时间）
-  setTimeout(function() {
-    document.body.removeChild(form);
-    document.body.removeChild(iframe);
-  }, 500);
+  const url = 'https://3277626-1427576426.ipaas.sandbox.myqcloud.com/survey_data';
+  fetch(url, {
+    method: 'POST',
+    headers: { 'Content-Type': 'application/json' },
+    body: JSON.stringify(data)
+  })
+  .then(response => {
+    if (!response.ok) console.error('数据提交失败，状态码：', response.status);
+    else console.log('数据提交成功！测试数据已发送至轻联。');
+  })
+  .catch(error => console.error('数据提交过程中发生网络错误:', error));
 }
-// ==================== 完成测试 ====================
+
+// ==================== 完成测试与结果展示 ====================
 function finishQuiz() {
-  if (answers[currentQ] === null) {
-    alert('还有题目没答完喵');
-    return;
-  }
-
-  // 计算分数
-  var qVals = answers.map(function(a) { return a + 1; });
-  var stress = (qVals[0]+qVals[1]+qVals[2]+qVals[3]+qVals[4]+qVals[5]+qVals[6]+qVals[7]+qVals[16]+qVals[17]) / 10;
-  var drive = (qVals[8]+qVals[9]+qVals[10]+qVals[11]) / 4;
-  var reg = (qVals[12]+qVals[13]+qVals[14]+qVals[15]) / 4;
-
-  var key = (stress>=3.5?'High':'Low') + '-' + (drive>=3.5?'High':'Low') + '-' + (reg>=3.5?'High':'Low');
-  resultType = typeData[key];
-
-  // Q19和Q20存完整文字
-  var q19Text = questions[18].opts[answers[18]];
-  var q20Text = questions[19].opts[answers[19]];
-
-  // 构建提交数据
-  var submitData = {
-    anonymousId: generateRandomId(),
-    timestamp: new Date().toISOString(),
-    personalityType: resultType.cn,
-    q1: qVals[0], q2: qVals[1], q3: qVals[2], q4: qVals[3],
-    q5: qVals[4], q6: qVals[5], q7: qVals[6], q8: qVals[7],
-    q9: qVals[8], q10: qVals[9], q11: qVals[10], q12: qVals[11],
-    q13: qVals[12], q14: qVals[13], q15: qVals[14], q16: qVals[15],
-    q17: qVals[16], q18: qVals[17],
-    q19: q19Text,
-    q20: q20Text
+  if (answers[currentQ]===null) { alert('还有题目没答完喵'); return; }
+  var qVals=answers.map(function(a){ return a+1; });
+  var stress=(qVals[0]+qVals[1]+qVals[2]+qVals[3]+qVals[4]+qVals[5]+qVals[6]+qVals[7]+qVals[16]+qVals[17])/10;
+  var drive=(qVals[8]+qVals[9]+qVals[10]+qVals[11])/4;
+  var reg=(qVals[12]+qVals[13]+qVals[14]+qVals[15])/4;
+  var key=(stress>=3.5?'High':'Low')+'-'+(drive>=3.5?'High':'Low')+'-'+(reg>=3.5?'High':'Low');
+  resultType=typeData[key];
+  var q19Text=questions[18].opts[answers[18]];
+  var q20Text=questions[19].opts[answers[19]];
+  var submitData={
+    anonymousId: generateRandomId(), timestamp: new Date().toISOString(),
+    personalityType: resultType.cn, q1:qVals[0], q2:qVals[1], q3:qVals[2],
+    q4:qVals[3], q5:qVals[4], q6:qVals[5], q7:qVals[6], q8:qVals[7],
+    q9:qVals[8], q10:qVals[9], q11:qVals[10], q12:qVals[11],
+    q13:qVals[12], q14:qVals[13], q15:qVals[14], q16:qVals[15],
+    q17:qVals[16], q18:qVals[17], q19:q19Text, q20:q20Text
   };
-
-  // 提交数据
-  submitToTencentDocs(submitData);
-
-  // 显示加载动画
+  submitToTencentDocs(submitData); // 静默发送数据到轻联
   showSlide('loading-slide');
-
-  // 1.8秒后显示结果
-  setTimeout(function() {
-    showResult(stress, drive, reg);
-    showSlide('result-slide');
-  }, 1800);
+  setTimeout(function(){ showResult(stress,drive,reg); showSlide('result-slide'); },1800);
 }
 
 function showResult(stress, drive, reg) {
-  document.getElementById('result-emoji').textContent = resultType.emoji;
-  document.getElementById('result-name-cn').textContent = resultType.cn;
-  document.getElementById('result-name-en').textContent = resultType.en;
-
-  // 柱状图
-  var bars = [
-    { label:'😰 压力敏感度', val:stress, color:'var(--primary)' },
-    { label:'🍩 进食驱动力', val:drive, color:'#FFB347' },
-    { label:'🧘 调控能力', val:reg, color:'var(--secondary)' }
-  ];
-  var chartHTML = '';
-  for (var i = 0; i < bars.length; i++) {
-    var b = bars[i];
-    var color = b.val >= 3.5 ? b.color : (b.val >= 2.5 ? '#FFB347' : '#B2BEC3');
-    chartHTML += '<div class="bar-row"><div class="bar-label">' + b.label + '</div><div class="bar-track"><div class="bar-inner" style="width:' + (b.val/5*100) + '%;background:' + color + ';"></div></div><div class="bar-score">' + b.val.toFixed(1) + ' / 5</div></div>';
-  }
-  document.getElementById('result-chart').innerHTML = chartHTML;
-  document.getElementById('result-desc').textContent = resultType.d;
-  document.getElementById('result-advice').innerHTML = '<strong>💡 专属建议</strong><br>' + resultType.a;
-
-  // 分享卡片
-  document.getElementById('share-emoji').textContent = resultType.emoji;
-  document.getElementById('share-name').textContent = resultType.cn;
-  document.getElementById('share-chart').innerHTML = chartHTML;
-  document.getElementById('share-desc').textContent = resultType.d;
-  document.getElementById('share-advice').textContent = '💡 ' + resultType.a;
-
-  // 二维码
-  var qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(window.location.href);
-  var qrImg = document.getElementById('qr-img');
-  qrImg.src = qrUrl;
-  qrImg.crossOrigin = 'anonymous';
-  qrImg.onerror = function() {
-    document.getElementById('qr-wrap').innerHTML = '<div class="qr-label">扫码测测你的吃饭人格 →</div>';
-  };
-
-  // 重置动画
-  var els = document.querySelectorAll('#result-slide .fade-up');
-  for (var i = 0; i < els.length; i++) {
-    els[i].style.animation = 'none';
-    els[i].offsetHeight;
-    els[i].style.animation = 'fadeUp 0.4s ease forwards';
-    els[i].style.animationDelay = (i * 0.15) + 's';
-  }
+  document.getElementById('result-emoji').textContent=resultType.emoji;
+  document.getElementById('result-name-cn').textContent=resultType.cn;
+  document.getElementById('result-name-en').textContent=resultType.en;
+  var bars=[ {label:'😰 压力敏感度',val:stress,color:'var(--primary)'},{label:'🍩 进食驱动力',val:drive,color:'#FFB347'},{label:'🧘 调控能力',val:reg,color:'var(--secondary)'} ];
+  var chartHTML='';
+  for (var i=0;i<bars.length;i++) { var b=bars[i]; var color=b.val>=3.5?b.color:(b.val>=2.5?'#FFB347':'#B2BEC3'); chartHTML+='<div class="bar-row"><div class="bar-label">'+b.label+'</div><div class="bar-track"><div class="bar-inner" style="width:'+(b.val/5*100)+'%;background:'+color+';"></div></div><div class="bar-score">'+b.val.toFixed(1)+' / 5</div></div>'; }
+  document.getElementById('result-chart').innerHTML=chartHTML;
+  document.getElementById('result-desc').textContent=resultType.d;
+  document.getElementById('result-advice').innerHTML='<strong>💡 专属建议</strong><br>'+resultType.a;
+  document.getElementById('share-emoji').textContent=resultType.emoji;
+  document.getElementById('share-name').textContent=resultType.cn;
+  document.getElementById('share-chart').innerHTML=chartHTML;
+  document.getElementById('share-desc').textContent=resultType.d;
+  document.getElementById('share-advice').textContent='💡 '+resultType.a;
+  var qrUrl='https://api.qrserver.com/v1/create-qr-code/?size=100x100&data='+encodeURIComponent(window.location.href);
+  var qrImg=document.getElementById('qr-img'); qrImg.src=qrUrl; qrImg.crossOrigin='anonymous';
+  qrImg.onerror=function(){ document.getElementById('qr-wrap').innerHTML='<div class="qr-label">扫码测测你的吃饭人格 →</div>'; };
+  var els=document.querySelectorAll('#result-slide .fade-up');
+  for (var i=0;i<els.length;i++) { els[i].style.animation='none'; els[i].offsetHeight; els[i].style.animation='fadeUp 0.4s ease forwards'; els[i].style.animationDelay=(i*0.15)+'s'; }
 }
 
-// ==================== 保存图片 ====================
+// ==================== 保存结果图片 (修复二维码与完整内容) ====================
 function saveImage() {
   var shareCard = document.getElementById('share-card');
-  shareCard.style.left = '0';
-  shareCard.style.top = '0';
-  shareCard.style.position = 'fixed';
-  shareCard.style.zIndex = '99999';
-  shareCard.style.width = '375px';
-
-  // 等二维码加载完
+  shareCard.style.position = 'fixed'; shareCard.style.left = '0'; shareCard.style.top = '0';
+  shareCard.style.zIndex = '99999'; shareCard.style.width = '375px';
   function doCapture() {
-    html2canvas(shareCard, {
-      scale: 2,
-      backgroundColor: '#FFFFFF',
-      allowTaint: true,
-      useCORS: true
-    }).then(function(canvas) {
-      var link = document.createElement('a');
-      link.download = '我的吃饭人格.png';
-      link.href = canvas.toDataURL('image/png');
-      link.click();
-      // 恢复隐藏
-      shareCard.style.position = 'absolute';
-      shareCard.style.left = '-9999px';
-      shareCard.style.top = '0';
-      shareCard.style.zIndex = '';
-    }).catch(function() {
-      alert('保存失败，请截图保存结果～');
-      shareCard.style.position = 'absolute';
-      shareCard.style.left = '-9999px';
-      shareCard.style.top = '0';
-      shareCard.style.zIndex = '';
-    });
+    html2canvas(shareCard, { scale: 2, backgroundColor: '#FFFFFF', allowTaint: true, useCORS: true })
+      .then(function(canvas) {
+        var link = document.createElement('a');
+        link.download = '我的吃饭人格.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+        shareCard.style.position = 'absolute'; shareCard.style.left = '-9999px'; shareCard.style.top = '0';
+        shareCard.style.zIndex = '';
+      })
+      .catch(function() {
+        alert('保存图片失败，请尝试截图保存结果～');
+        shareCard.style.position = 'absolute'; shareCard.style.left = '-9999px'; shareCard.style.top = '0';
+        shareCard.style.zIndex = '';
+      });
   }
-
   var qrImg = document.getElementById('qr-img');
-  if (qrImg && !qrImg.complete) {
-    qrImg.onload = doCapture;
-  } else {
-    doCapture();
-  }
+  if (qrImg && !qrImg.complete) { qrImg.onload = doCapture; } else { doCapture(); }
 }
 </script>
 </body>
