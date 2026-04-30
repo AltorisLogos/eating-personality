@@ -1,0 +1,595 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+  <title>大学生吃饭人格测试</title>
+  <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+  <style>
+    :root {
+      --bg: #FEF9F2;
+      --primary: #FF6B6B;
+      --secondary: #4ECDC4;
+      --card: #ffffff;
+      --text: #2D3436;
+      --muted: #F1F2F6;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      display: flex;
+      justify-content: center;
+      align-items: flex-start;
+      min-height: 100vh;
+      padding: 18px;
+    }
+
+    .app {
+      max-width: 480px;
+      width: 100%;
+      min-height: 100vh;
+    }
+
+    /* 屏幕切换 */
+    .screen {
+      display: none;
+      animation: fade 0.3s ease;
+    }
+    .screen.active {
+      display: block;
+    }
+    @keyframes fade {
+      from { opacity: 0; transform: translateX(20px); }
+      to { opacity: 1; transform: none; }
+    }
+
+    /* 卡片 */
+    .card {
+      background: #fff;
+      border-radius: 20px;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.06);
+      padding: 24px;
+    }
+
+    /* 居中工具 */
+    .center { text-align: center; }
+    .emoji { font-size: 64px; margin-bottom: 12px; }
+    .title {
+      font-size: 32px;
+      font-weight: 800;
+      color: var(--primary);
+      margin-bottom: 8px;
+    }
+    .subtitle {
+      font-size: 18px;
+      color: var(--text);
+      margin-bottom: 18px;
+    }
+
+    /* 徽章 */
+    .badges {
+      display: flex;
+      gap: 8px;
+      justify-content: center;
+      flex-wrap: wrap;
+      margin: 18px 0;
+    }
+    .badge {
+      background: #fff;
+      padding: 8px 14px;
+      border-radius: 999px;
+      font-size: 13px;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.04);
+    }
+
+    /* 按钮 */
+    button {
+      border: none;
+      border-radius: 999px;
+      padding: 14px 18px;
+      font-size: 16px;
+      min-height: 48px;
+      cursor: pointer;
+      transition: all 0.2s ease;
+      font-family: inherit;
+    }
+    button:active {
+      transform: scale(0.97);
+    }
+    .primary {
+      background: var(--primary);
+      color: #fff;
+      width: 100%;
+      box-shadow: 0 4px 12px rgba(255,107,107,0.3);
+    }
+    .ghost {
+      background: #fff;
+      border: 1.5px solid var(--primary);
+      color: var(--primary);
+    }
+
+    /* 进度条 */
+    .progress {
+      height: 8px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+      margin: 12px 0 18px;
+    }
+    .bar {
+      height: 100%;
+      background: linear-gradient(90deg, var(--primary), var(--secondary));
+      width: 5%;
+      transition: width 0.3s ease;
+    }
+    #progressText {
+      font-size: 14px;
+      color: #777;
+      margin-bottom: 4px;
+    }
+
+    /* 题目 */
+    #sectionLabel {
+      font-size: 14px;
+      color: var(--secondary);
+      font-weight: 600;
+      margin-bottom: 8px;
+    }
+    #questionText {
+      font-size: 20px;
+      margin-bottom: 18px;
+      font-weight: 600;
+    }
+
+    /* 选项 */
+    .option {
+      display: block;
+      width: 100%;
+      margin: 8px 0;
+      padding: 14px 16px;
+      background: var(--muted);
+      border-radius: 16px;
+      text-align: left;
+      font-size: 16px;
+      border: 2px solid transparent;
+    }
+    .option.selected {
+      background: var(--primary);
+      color: #fff;
+      border-color: var(--primary);
+      font-weight: 500;
+    }
+
+    .nav {
+      display: flex;
+      justify-content: space-between;
+      gap: 12px;
+      margin-top: 20px;
+    }
+    .muted {
+      color: #777;
+      font-size: 13px;
+      margin-top: 12px;
+      line-height: 1.5;
+    }
+
+    /* 结果页图表 */
+    .metric {
+      margin: 14px 0;
+    }
+    .metric-label {
+      display: flex;
+      justify-content: space-between;
+      font-size: 14px;
+      margin-bottom: 6px;
+    }
+    .metric-track {
+      height: 10px;
+      background: #eee;
+      border-radius: 999px;
+      overflow: hidden;
+    }
+    .metric-fill {
+      height: 100%;
+      border-radius: 999px;
+      background: var(--primary);
+      transition: width 0.8s ease;
+    }
+    .type-name {
+      font-size: 28px;
+      font-weight: 800;
+      margin: 8px 0;
+    }
+    .type-en {
+      font-size: 14px;
+      color: #999;
+      font-style: italic;
+      margin-bottom: 20px;
+    }
+
+    /* 分享卡片（离屏渲染） */
+    #share-card {
+      position: absolute;
+      left: -9999px;
+      top: 0;
+      width: 360px;
+      background: #fff;
+      padding: 24px;
+      border-radius: 20px;
+      font-family: -apple-system, BlinkMacSystemFont, "PingFang SC", "Microsoft YaHei", sans-serif;
+      color: #2D3436;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    }
+    #share-card h3 {
+      font-size: 18px;
+      color: #FF6B6B;
+      margin-bottom: 12px;
+      text-align: center;
+    }
+    #share-card .metric {
+      margin: 8px 0;
+    }
+    #share-card img {
+      display: block;
+      margin: 12px auto 6px;
+    }
+
+    /* 加载动画 */
+    .loading-dots {
+      display: flex;
+      justify-content: center;
+      gap: 8px;
+      margin: 20px 0;
+    }
+    .dot {
+      width: 12px;
+      height: 12px;
+      background: var(--primary);
+      border-radius: 50%;
+      animation: bounce 1.4s infinite ease-in-out both;
+    }
+    .dot:nth-child(1) { animation-delay: -0.32s; }
+    .dot:nth-child(2) { animation-delay: -0.16s; }
+    @keyframes bounce {
+      0%, 80%, 100% { transform: scale(0); }
+      40% { transform: scale(1); }
+    }
+  </style>
+</head>
+<body>
+<div class="app">
+
+  <!-- ===== 开始页 ===== -->
+  <section id="landing" class="screen active center" style="padding-top: 40px;">
+    <div class="emoji">🍜</div>
+    <div class="title">大学生吃饭人格测试</div>
+    <div class="subtitle">🍜 考试周，你的食欲还好吗？</div>
+    <p style="margin-bottom: 18px; color: #555; line-height: 1.7;">
+      想知道自己在考试周是什么「吃饭人格」吗？<br>回答 20 道选择题，看看你是暴风吸入型、稳如泰山型，还是隐藏的深夜忏悔型。<br>测试结束后，还为你准备了专属的饮食行为画像和实用建议哦～
+    </p>
+    <div class="badges">
+      <span class="badge">🔒 匿名测试</span>
+      <span class="badge">⏱️ 约3分钟</span>
+      <span class="badge">🎯 专属人格分析</span>
+    </div>
+    <button class="primary" onclick="startQuiz()" style="margin-top: 8px;">开始测试 →</button>
+    <p class="muted" style="margin-top: 20px;">本测试为学术研究用途，数据严格保密。</p>
+  </section>
+
+  <!-- ===== 答题页 ===== -->
+  <section id="quiz" class="screen">
+    <div class="card">
+      <div id="progressText">第 1 / 20 题</div>
+      <div class="progress"><div id="progressBar" class="bar"></div></div>
+      <p id="sectionLabel"></p>
+      <h3 id="questionText"></h3>
+      <div id="options"></div>
+      <div id="questionNote" class="muted"></div>
+      <div class="nav">
+        <button id="prevBtn" class="ghost" onclick="prevQuestion()" style="visibility: hidden;">上一题</button>
+        <button id="nextBtn" class="primary" onclick="nextQuestion()" style="width: auto; flex: 1;">下一题 →</button>
+      </div>
+    </div>
+  </section>
+
+  <!-- ===== 加载页 ===== -->
+  <section id="loading" class="screen center" style="padding-top: 80px;">
+    <div class="emoji">🍽️</div>
+    <p style="font-size: 18px; margin: 16px 0;">正在分析你的吃饭人格...</p>
+    <div class="loading-dots">
+      <div class="dot"></div>
+      <div class="dot"></div>
+      <div class="dot"></div>
+    </div>
+  </section>
+
+  <!-- ===== 结果页 ===== -->
+  <section id="result" class="screen">
+    <div class="card" id="resultContent"></div>
+  </section>
+
+</div>
+
+<!-- 离屏分享卡片（用于生成图片） -->
+<div id="share-card"></div>
+
+<script>
+  // ==================== 题库 ====================
+  const questionData = [
+    { section: '😰 压力感知', text: '在最近一次考试期间，你感受到的压力程度是？', options: ['1 — 几乎没有压力', '2 — 轻微压力', '3 — 中等压力', '4 — 较大压力', '5 — 非常大压力'] },
+    { section: '😰 压力感知', text: '考试期间，你有多频繁地因为学习任务而感到时间不够用？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '😰 压力感知', text: '考试期间，你是否容易出现头痛、胃部不适或失眠等身体反应？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '😰 压力感知', text: '考试周结束后，你通常需要多久才能恢复到正常的心理状态？', options: ['1 — 当天就恢复', '2 — 一两天', '3 — 三四天', '4 — 将近一周', '5 — 需要一周以上'] },
+    { section: '🍽️ 饮食变化', text: '与没有考试的时期相比，你在考试期间每天的进餐次数发生了什么变化？', options: ['1 — 明显增加', '2 — 略有增加', '3 — 基本不变', '4 — 略有减少', '5 — 明显减少'] },
+    { section: '🍽️ 饮食变化', text: '考试期间，你吃蔬菜和水果的频率与平时相比如何？', options: ['1 — 明显增加', '2 — 略有增加', '3 — 基本不变', '4 — 略有减少', '5 — 明显减少'] },
+    { section: '🍽️ 饮食变化', text: '考试期间，你吃快餐、方便面或外卖的频率与平时相比如何？', options: ['1 — 明显减少', '2 — 略有减少', '3 — 基本不变', '4 — 略有增加', '5 — 明显增加'] },
+    { section: '🍽️ 饮食变化', text: '考试期间，你吃甜食或含糖饮料的频率与平时相比如何？', options: ['1 — 明显减少', '2 — 略有减少', '3 — 基本不变', '4 — 略有增加', '5 — 明显增加'] },
+    { section: '🍩 情绪与进食', text: '当你感到紧张或焦虑时，会不自觉地想吃东西吗？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '🍩 情绪与进食', text: '考试期间感到烦躁时，吃东西能让你平静下来吗？', options: ['1 — 完全不会', '2 — 偶尔可以', '3 — 有时可以', '4 — 经常可以', '5 — 几乎每次都会'] },
+    { section: '🍩 情绪与进食', text: '即使不饿，看到或闻到喜欢的食物，你也很难忍住不吃吗？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '🍩 情绪与进食', text: '在图书馆或自习室看到别人吃东西，你也会想去买点什么吃吗？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '🧘 自我调控', text: '面对困难或挫折时，你通常能多快调整好自己的情绪状态？', options: ['1 — 非常慢', '2 — 比较慢', '3 — 一般', '4 — 比较快', '5 — 非常快'] },
+    { section: '🧘 自我调控', text: '考试期间，你会有意识地提醒自己按时吃饭吗？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '🧘 自我调控', text: '考试期间，你会有意识地选择相对健康的食物吗？', options: ['1 — 从不', '2 — 很少', '3 — 有时', '4 — 经常', '5 — 总是'] },
+    { section: '🧘 自我调控', text: '当你发现自己在压力下吃得太多或太少时，你能主动调整回来吗？', options: ['1 — 完全不能', '2 — 比较难', '3 — 有时可以', '4 — 通常可以', '5 — 完全可以'] },
+    { section: '💺 日常活动', text: '考试期间，你平均每天坐着学习的时间大约是？', options: ['1 — 少于 4 小时', '2 — 4-6 小时', '3 — 6-8 小时', '4 — 8-10 小时', '5 — 超过 10 小时'] },
+    { section: '💺 日常活动', text: '考试期间，你进行体育锻炼的频率与平时相比如何？', options: ['1 — 明显增加', '2 — 略有增加', '3 — 基本不变', '4 — 略有减少', '5 — 明显减少'] },
+    { section: '👤 关于你', text: '你的性别是？', options: ['A. 男', 'B. 女'], note: '🔒 严格保密｜我们收集性别信息仅用于分析不同群体的饮食应对模式是否存在差异，你的回答将被严格保密。' },
+    { section: '👤 关于你', text: '你目前所在的年级是？', options: ['A. 大一', 'B. 大二', 'C. 大三', 'D. 大四及以上'], note: '🔒 严格保密｜了解年级分布有助于我们比较不同学业阶段学生的压力与饮食特征。' }
+  ];
+
+  // ==================== 结果映射 ====================
+  const resultMap = {
+    HHL: {
+      n: '暴风吸入型', e: 'Stress Snacker', emoji: '🔴',
+      d: '你对待食物的方式，就像古希腊人对待命运——明知不可为，但最后往往必然为之。你一焦虑就忍不住想往嘴里塞点东西，甜的油的来者不拒。你很清楚那袋薯片吃完会后悔，那杯奶茶喝完会后悔，但在考试的重压下，你的意志力就像一根绷紧的小提琴琴弦，再承受一点压力可能就会崩溃。于是你化身休谟："理性是，并且也应当是激情的奴隶。"吃吧，让我们把焦虑和知识一起咽下去。当然，你也不是每时每刻都在惦记美食。偶尔在极度紧张的考场上，你也会短暂地失去胃口。但考完之后，食欲就会带着报复性地热情卷土重来。你优秀地继承了老资历们的自然生存法则。对你来说，吃是应对压力的本能反应。',
+      a: '你的食欲容易在压力下失控，但这不是意志力的问题，而是你的身体在寻求安慰。可以试着在考试周备一些相对健康的零食放在手边，如坚果、果干，用它们替代高糖高油的食物。同时留意自己是真的饿了，还是只是在缓解情绪。'
+    },
+    HHH: {
+      n: '深夜忏悔型', e: 'Midnight Regretter', emoji: '🟠',
+      d: '你是斯多亚学派最忠实的信徒——至少在白天是。你在图书馆和教室里像一位苦修的贤者，对零食视而不见，持续隐忍。但结束一天的疲惫后，到了晚上，你终究绷不住了。尤其在离开图书馆、回宿舍的途中。于是你就带着一种近乎宗教式的负罪感破了戒。每当你吃饭时，你都在和自己的欲望进行一场永无止境的拉锯战。有趣的是，在白天你绷得太紧的时候，常常一整天都不想吃饭，甚至是废寝忘食到"一忙就忘了吃饭"的地步。直到晚上你完成了今天给自己设定的DDL，你的胃终于发出了它的抗议。',
+      a: '你的饮食习惯很容易受压力影响，但你有自我管理的意识。你可以尝试在白天安排固定的加餐时间，避免忍到深夜。如果白天感到饥饿，就正常进食，切忌饥一顿饱一顿，不然长期下来容易胃疼。如果晚上确实饿了，提前准备好低热量的夜宵选项。与其吃完再懊悔，不如把懊悔的能量用在提前准备上。'
+    },
+    HLL: {
+      n: '压力厌食型', e: 'Stress Starver', emoji: '🟡',
+      d: '"我思故我在。"——笛卡尔。"我焦虑故我不饿。"——你。你的胃似乎先于你的大脑理解了某种存在主义的荒诞：如果我要忙于一场意义不明的考试，吃饭又有什么意义呢？一碗泡面摆在你面前，你看着它，它看着你，仿佛你们之间已经隔了一层可悲的厚障壁。你抬起筷子，吃一口，却不想再吃第二口了，因为你此刻真的几乎感受不到饥饿。于是你跳过一餐又一餐，放任你的胃口和心情一起消失。',
+      a: '你终究不是只靠大脑自行运作的永动机。偶尔也停下来吃一口吧，哪怕萨特也会喝杯咖啡的。即使不饿，你也最好尽量定时进食，可以选一些清淡易入口的东西，比如粥、酸奶或水果。如果有必要，可以设置闹钟提醒自己吃饭，把进食当作恢复精力的一部分。'
+    },
+    HLH: {
+      n: '战术补给型', e: 'Strategic Eater', emoji: '🟢',
+      d: '与很多人不同，你并不把进食视为"享受"。你把考试当成作战，而把吃饭当成补给。你很少因为情绪波动而改变饮食计划，因为你的理性告诉你，身体的稳定性的思维清晰的前提。考试的压力确实大，但这对你而言只是变成了一个需要考虑的变量。你会有意识地定时吃饭、选你认为相对健康的食物，甚至提前准备。今天要长时间复习，那早餐就多吃点蛋白；明天要上考场，那就整点儿低GI碳水防止晕碳。斯多亚学派说"控制你能控制的，接受你不能控制的"，而你就是这一观点的践行者——或许你无法控制试题难度，但你至少可以主动干预自己的血糖曲线。',
+      a: '你已经做得很好了。你可以考虑提前规划考试周的餐单，简化饮食决策，询问AI获得参考意见，避免因为思考"吃什么"而消耗过多精力。如果偶尔产生了对某种美食的食欲，也不妨顺从自己的胃。你的策略是理性而有效的，可以继续坚持下去。'
+    },
+    LHL: {
+      n: '快乐干饭型', e: 'Food Lover', emoji: '🔵',
+      d: '你是伊壁鸠鲁的知己。你深谙一个朴素的真理：快乐是生活的底色，而进食是获得快乐的捷径，生活的意义就是去码头整点儿薯条。吃饭这件事对你来说本来就很重要，跟考不考试关系不大。你容易被美食吸引，情绪也会带动你的食欲。人生苦短，趁热吃饭。一个连吃都提不起劲的人，又怎么能对知识保持真正的热情呢？当然，偶尔极度焦虑时你也会吃不太下，但这通常很短，以至于不足以被你视为"厌食"。',
+      a: '吃对你来说是享受，这本身不是问题。但如果你对此产生焦虑，可以试着在品鉴时留意一下：你是真的饿了，还是被情绪或环境带动了？试着在开心吃之前停顿几秒，问问自己身体的需求，这样吃会更满足也更健康。'
+    },
+    LHH: {
+      n: '精致享受型', e: 'Food Connoisseur', emoji: '🟣',
+      d: '吃，是一门艺术。进食在你眼中已经成为了生活美学的一部分。在别人眼里，考试周是灰头土脸的苦修期；在你眼里，越是在这样高压的缝隙之中，越需要一顿体面的漂亮饭，证明自己掌控着生活的节奏。你认为人生的意义不在于效率，而在于质量。你爱吃，也会吃，你懂得用美食调节心情。你享受而不放纵，品鉴而不沉溺。考试期间你可能会特意找好吃的奖励自己，但不会乱吃；你也懂得适时停下。吃在你这里是生活品质，不是发泄。',
+      a: '你懂得用美食调节心情，这是一种健康的生活方式。你可以继续保持这份对食物的热爱和掌控感。考试期间可以抽空给自己安排一次精致的漂亮饭，把它当作阶段性的仪式。'
+    },
+    LLL: {
+      n: '随便对付型', e: 'Whatever Eater', emoji: '⚪',
+      d: '"没有那种世俗的欲望🙏"在你的同学看来，你可能已经修到了某种六根清净的境界。你饿了就吃，不饿就不吃，有什么吃什么，不挑不拣，随遇而安。但与禅宗不同，你这种"自在"与其说是超脱，不如说是纯粹的实用主义。你可能会觉得：吃饭的时间省下来又能多背10个单词，或者哪怕是多看一会手机。考试期间你对吃这件事实在提不起兴趣，但这和考不考试无关，而是你对吃这件事本来就很佛。一旦投入到某件事情当中，你可能一整天都会忘记吃饭。胃对你而言只是一个需要燃料的容器，至于燃料嘛，饭不在香，能吃就行。',
+      a: '好消息是你几乎不会因饮食而焦虑，但也请注意：长期不规律饮食、跳餐少餐，这都会影响精力和注意力。可以试着从每天至少安排一顿营养均衡（也就是说至少应该有主食、蛋白质、蔬菜）的正餐开始，这不会"浪费"你太多时间，但能给身体稳定的能量支持。也可以尝试固定一个大致的进食时间，比如12:00吃午餐，18:00吃晚餐。另外，如果已经感到饥饿，一定不要刻意忍耐，该吃就吃，不然长期下来容易胃疼。'
+    },
+    LLH: {
+      n: '稳如泰山型', e: 'Stress-Proof Eater', emoji: '🟤',
+      d: '不管考试多紧张，你的饮食节奏都几乎不受影响。你不是不焦虑，也不是没食欲，只是或许天生就比别人更擅长把"食欲"和"情绪"分开处理。你几乎不会因为情绪变化而暴食或厌食，也对自己的状态有稳定的掌控感。在饮食方面，你已经达到了斯多亚学派所梦寐以求的"不受外物扰动的内在安宁"境界。这种稳定性的源头你也说不清，亚里士多德说德性是一种习惯，或许你已经养成了。在同学们眼里，你可能就是那个"考完试还有心思给自己做饭"的人。',
+      a: '你能在压力下保持饮食稳定，这是一种宝贵的能力。或许你可以在朋友中分享自己的方法，帮助那些考试期间饮食紊乱的同学。你可以继续保持，你是难得的那一小部分人。'
+    }
+  };
+
+  // ==================== 核心变量 ====================
+  let current = 0;
+  let answers = new Array(20).fill(null); // 用 null 表示未答
+
+  // ==================== 屏幕切换 ====================
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(el => el.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ==================== 开始 ====================
+  function startQuiz() {
+    showScreen('quiz');
+    renderQuestion();
+  }
+
+  // ==================== 渲染题目 ====================
+  function renderQuestion() {
+    const q = questionData[current];
+    document.getElementById('progressText').textContent = `第 ${current + 1} / 20 题`;
+    document.getElementById('progressBar').style.width = `${(current + 1) / 20 * 100}%`;
+    document.getElementById('sectionLabel').textContent = q.section;
+    document.getElementById('questionText').textContent = `Q${current + 1}. ${q.text}`;
+    document.getElementById('questionNote').textContent = q.note || '';
+
+    const optionsContainer = document.getElementById('options');
+    optionsContainer.innerHTML = '';
+    q.options.forEach(opt => {
+      const btn = document.createElement('button');
+      btn.className = 'option' + (answers[current] === opt ? ' selected' : '');
+      btn.textContent = opt;
+      btn.addEventListener('click', () => {
+        answers[current] = opt;
+        renderQuestion();
+        // 选中后自动跳转（可选，保持原版不自动跳转，由用户点下一题）
+      });
+      optionsContainer.appendChild(btn);
+    });
+
+    // 导航按钮
+    const prevBtn = document.getElementById('prevBtn');
+    const nextBtn = document.getElementById('nextBtn');
+    prevBtn.style.visibility = current === 0 ? 'hidden' : 'visible';
+    nextBtn.textContent = current === 19 ? '查看结果 →' : '下一题 →';
+    nextBtn.style.flex = '1';
+    nextBtn.style.width = 'auto';
+  }
+
+  // ==================== 上一题 ====================
+  function prevQuestion() {
+    if (current > 0) {
+      current--;
+      renderQuestion();
+    }
+  }
+
+  // ==================== 下一题 / 查看结果 ====================
+  function nextQuestion() {
+    // 移除烦人的“还有题目没答完”弹窗 —— 不再阻止用户跳题
+    // 如果用户未答题，answers[current] 为 null，计分时会按默认值 3 处理
+
+    if (current < 19) {
+      current++;
+      renderQuestion();
+    } else {
+      finishQuiz();
+    }
+  }
+
+  // ==================== 提取数值 ====================
+  function numeric(val) {
+    if (val === null || val === undefined) return 3; // 未答题默认中等
+    const n = parseInt(val);
+    return isNaN(n) ? 3 : n;
+  }
+
+  // ==================== 完成测试 ====================
+  function finishQuiz() {
+    showScreen('loading');
+
+    // 模拟计算延迟
+    setTimeout(() => {
+      const values = answers.map(numeric);
+
+      // 三个维度计分
+      const stressSensitivity = (values[0] + values[1] + values[2] + values[3] + values[4] + values[5] + values[6] + values[7] + values[16] + values[17]) / 10;
+      const eatingDrive = (values[8] + values[9] + values[10] + values[11]) / 4;
+      const selfRegulation = (values[12] + values[13] + values[14] + values[15]) / 4;
+
+      // 判定类型
+      const sKey = stressSensitivity >= 3.5 ? 'H' : 'L';
+      const eKey = eatingDrive >= 3.5 ? 'H' : 'L';
+      const rKey = selfRegulation >= 3.5 ? 'H' : 'L';
+      const typeKey = sKey + eKey + rKey;
+      const type = resultMap[typeKey];
+
+      // 构建提交数据
+      const payload = {
+        anonymousId: generateRandomId(),
+        timestamp: new Date().toISOString(),
+        personalityType: type.n
+      };
+      answers.forEach((ans, i) => {
+        payload['q' + (i + 1)] = ans || ''; // 未答则为空字符串
+      });
+
+      // 静默提交到腾讯文档
+      submitToTencentDocs(payload);
+
+      // 渲染结果页
+      renderResult(type, stressSensitivity, eatingDrive, selfRegulation);
+    }, 1800);
+  }
+
+  // ==================== 匿名 ID ====================
+  function generateRandomId() {
+    return 'user_' + Math.random().toString(36).substr(2, 8);
+  }
+
+  // ==================== 数据提交（fetch静默版） ====================
+  function submitToTencentDocs(data) {
+    // 使用 fetch 静默提交，不会跳转页面，不影响用户体验
+    fetch('https://docs.qq.com/form/page/DUEtsV2VYTE9adGRO', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+      body: new URLSearchParams(data).toString()
+    }).catch(err => {
+      // 静默失败，不影响用户
+      console.log('提交未成功，可忽略:', err.message);
+    });
+  }
+
+  // ==================== 图表组件 ====================
+  function metricHTML(label, emoji, val) {
+    const pct = (val / 5 * 100).toFixed(0);
+    return `
+      <div class="metric">
+        <div class="metric-label"><span>${emoji} ${label}</span><span>${val.toFixed(1)} / 5</span></div>
+        <div class="metric-track"><div class="metric-fill" style="width: ${pct}%;"></div></div>
+      </div>
+    `;
+  }
+
+  // ==================== 渲染结果 ====================
+  function renderResult(type, s, e, r) {
+    const container = document.getElementById('resultContent');
+    container.innerHTML = `
+      <div class="center">
+        <div class="emoji">${type.emoji}</div>
+        <div class="type-name">${type.n}</div>
+        <div class="type-en">${type.e}</div>
+      </div>
+      ${metricHTML('压力敏感度', '😰', s)}
+      ${metricHTML('进食驱动力', '🍩', e)}
+      ${metricHTML('调控能力', '🧘', r)}
+      <div class="card" style="margin-top: 16px; background: #FFFBF5;">
+        <p style="line-height: 1.8; margin-bottom: 14px;">${type.d}</p>
+        <p style="line-height: 1.8; color: var(--primary);">💡 ${type.a}</p>
+      </div>
+      <div class="nav" style="margin-top: 20px;">
+        <button class="ghost" onclick="location.reload()">🔄 重新测试</button>
+        <button class="primary" onclick="saveImage()" style="flex: 1; width: auto;">📸 保存结果图片</button>
+      </div>
+    `;
+
+    // 预渲染分享卡片（离屏）
+    const shareCard = document.getElementById('share-card');
+    const qrUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=100x100&data=' + encodeURIComponent(window.location.href);
+    shareCard.innerHTML = `
+      <h3>大学生吃饭人格测试</h3>
+      <p style="text-align:center; font-size: 20px;">${type.emoji} ${type.n}</p>
+      <p style="text-align:center; font-style:italic; color:#999;">${type.e}</p>
+      ${metricHTML('压力敏感度', '😰', s)}
+      ${metricHTML('进食驱动力', '🍩', e)}
+      ${metricHTML('调控能力', '🧘', r)}
+      <p style="font-size: 13px; line-height: 1.6; margin-top: 12px;">${type.d.slice(0, 100)}...</p>
+      <img src="${qrUrl}" alt="QR" onerror="this.outerHTML='<p style=text-align:center;color:#999;>扫码测测你的吃饭人格</p>'" style="display:block;margin:12px auto 6px;" />
+      <p style="text-align:center; font-size:12px; color:#999;">扫码测测你的吃饭人格 →</p>
+    `;
+
+    showScreen('result');
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ==================== 保存结果图片 ====================
+  function saveImage() {
+    const shareCard = document.getElementById('share-card');
+    html2canvas(shareCard, { scale: 2, backgroundColor: '#FFFFFF' })
+      .then(canvas => {
+        const link = document.createElement('a');
+        link.download = '我的吃饭人格.png';
+        link.href = canvas.toDataURL('image/png');
+        link.click();
+      })
+      .catch(() => {
+        alert('保存失败，请截图保存结果～');
+      });
+  }
+</script>
+</body>
+</html>
