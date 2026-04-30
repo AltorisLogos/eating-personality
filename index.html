@@ -273,44 +273,69 @@ function prevQuestion() { if (currentQ>0) { currentQ--; renderQuestion(); } }
 
 // ==================== 数据发送到金数据（静默 fetch，不跳转） ====================
 function submitToJinshuju(data) {
-  var formId = 'nfTrxZ';
-  var apiKey = '-0NCcSQ9xLxpmIQSbXNR9w';
-  var apiSecret = '_z94JayIjy-pkDvnBQ1ZHQ';
+    // 1. 准备 Webhook 地址（也是数据的接收地址）
+    var url = 'https://api.jinshuju.net/v1/forms/nfTrxZ/entries';
+    
+    // 2. 创建一个隐藏的 iframe，避免页面跳转
+    var iframe = document.createElement('iframe');
+    iframe.name = 'jsj-hidden-frame';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
 
-  fetch('https://api.jinshuju.net/v1/forms/' + formId, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'Authorization': 'Basic ' + btoa(apiKey + ':' + apiSecret)
-    },
-    body: JSON.stringify({
-      field_1: data.anonymousId,
-      field_2: data.timestamp,
-      field_3: data.personalityType,
-      field_4: data.q1,
-      field_5: data.q2,
-      field_6: data.q3,
-      field_7: data.q4,
-      field_8: data.q5,
-      field_9: data.q6,
-      field_10: data.q7,
-      field_11: data.q8,
-      field_12: data.q9,
-      field_13: data.q10,
-      field_14: data.q11,
-      field_15: data.q12,
-      field_16: data.q13,
-      field_17: data.q14,
-      field_18: data.q15,
-      field_19: data.q16,
-      field_20: data.q17,
-      field_21: data.q18,
-      field_22: data.q19,
-      field_23: data.q20
-    })
-  }).catch(function(err) {
-    console.log('数据提交失败：' + err.message);
-  });
+    // 3. 创建一个表单，并设置用 iframe 来接收响应
+    var form = document.createElement('form');
+    form.method = 'POST';
+    form.action = url;
+    form.target = 'jsj-hidden-frame';
+    form.style.display = 'none';
+
+    // 4. 把数据逐个添加到表单中，注意字段名要与 API Code 对应
+    function addField(name, value) {
+        var input = document.createElement('input');
+        input.type = 'hidden';
+        input.name = name;
+        input.value = value;
+        form.appendChild(input);
+    }
+
+    // 5. 将 API Key 和 Secret 作为表单认证信息
+    addField('api_key', '-0NCcSQ9xLxpmIQSbXNR9w');
+    addField('api_secret', '_z94JayIjy-pkDvnBQ1ZHQ');
+
+    // 6. 添加所有数据字段
+    addField('entry[field_1]', data.anonymousId);
+    addField('entry[field_2]', data.timestamp);
+    addField('entry[field_3]', data.personalityType);
+    addField('entry[field_4]', data.q1);
+    addField('entry[field_5]', data.q2);
+    addField('entry[field_6]', data.q3);
+    addField('entry[field_7]', data.q4);
+    addField('entry[field_8]', data.q5);
+    addField('entry[field_9]', data.q6);
+    addField('entry[field_10]', data.q7);
+    addField('entry[field_11]', data.q8);
+    addField('entry[field_12]', data.q9);
+    addField('entry[field_13]', data.q10);
+    addField('entry[field_14]', data.q11);
+    addField('entry[field_15]', data.q12);
+    addField('entry[field_16]', data.q13);
+    addField('entry[field_17]', data.q14);
+    addField('entry[field_18]', data.q15);
+    addField('entry[field_19]', data.q16);
+    addField('entry[field_20]', data.q17);
+    addField('entry[field_21]', data.q18);
+    addField('entry[field_22]', data.q19);
+    addField('entry[field_23]', data.q20);
+
+    // 7. 发送表单
+    document.body.appendChild(form);
+    form.submit();
+
+    // 8. 延迟清理临时表单
+    setTimeout(function() {
+        document.body.removeChild(form);
+        document.body.removeChild(iframe);
+    }, 500);
 }
 
 function finishQuiz() {
