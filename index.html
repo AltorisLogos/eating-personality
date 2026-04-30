@@ -271,39 +271,37 @@ function selectOption(idx) { answers[currentQ]=idx; renderQuestion(); }
 function nextQuestion() { if (answers[currentQ]===null) { alert('还有题目没答完喵'); return; } if (currentQ<19) { currentQ++; renderQuestion(); } }
 function prevQuestion() { if (currentQ>0) { currentQ--; renderQuestion(); } }
 
-// ==================== 数据发送到金数据（修正版：数值转字符串） ====================
+// ==================== 数据发送到金数据（扁平化 JSON） ====================
 function submitToJinshuju(data) {
   var apiKey = 'fH9vSZTMsUvBGZIhE5AyLw';
   var apiSecret = '7zDsH82Hw3GMvgGYHg6FrA';
   var url = 'https://ztb35hzc.jsjform.com/api/v1/forms/nfTrxZ/entries';
 
-  // 将所有值转为字符串，确保数据类型与金数据字段匹配
+  // 将所有值转为字符串，并直接放在根层级
   var payload = {
-    entry: {
-      field_1: String(data.anonymousId),
-      field_2: String(data.timestamp),
-      field_3: String(data.personalityType),
-      field_4: String(data.q1),
-      field_5: String(data.q2),
-      field_6: String(data.q3),
-      field_7: String(data.q4),
-      field_8: String(data.q5),
-      field_9: String(data.q6),
-      field_10: String(data.q7),
-      field_11: String(data.q8),
-      field_12: String(data.q9),
-      field_13: String(data.q10),
-      field_14: String(data.q11),
-      field_15: String(data.q12),
-      field_16: String(data.q13),
-      field_17: String(data.q14),
-      field_18: String(data.q15),
-      field_19: String(data.q16),
-      field_20: String(data.q17),
-      field_21: String(data.q18),
-      field_22: String(data.q19),
-      field_23: String(data.q20)
-    }
+    field_1: String(data.anonymousId),
+    field_2: String(data.timestamp),
+    field_3: String(data.personalityType),
+    field_4: String(data.q1),
+    field_5: String(data.q2),
+    field_6: String(data.q3),
+    field_7: String(data.q4),
+    field_8: String(data.q5),
+    field_9: String(data.q6),
+    field_10: String(data.q7),
+    field_11: String(data.q8),
+    field_12: String(data.q9),
+    field_13: String(data.q10),
+    field_14: String(data.q11),
+    field_15: String(data.q12),
+    field_16: String(data.q13),
+    field_17: String(data.q14),
+    field_18: String(data.q15),
+    field_19: String(data.q16),
+    field_20: String(data.q17),
+    field_21: String(data.q18),
+    field_22: String(data.q19),
+    field_23: String(data.q20)
   };
 
   fetch(url, {
