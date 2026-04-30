@@ -274,7 +274,7 @@ function prevQuestion() { if (currentQ>0) { currentQ--; renderQuestion(); } }
 // ==================== 数据发送到金数据（静默 fetch，不跳转） ====================
 function submitToJinshuju(data) {
     // 1. 准备 Webhook 地址（也是数据的接收地址）
-    var url = 'https://api.jinshuju.net/v1/forms/nfTrxZ/entries';
+    var url = 'https://ztb35hzc.jsjform.com/api/v1/forms/nfTrxZ/entries';
     
     // 2. 创建一个隐藏的 iframe，避免页面跳转
     var iframe = document.createElement('iframe');
