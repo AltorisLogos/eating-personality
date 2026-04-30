@@ -271,35 +271,46 @@ function selectOption(idx) { answers[currentQ]=idx; renderQuestion(); }
 function nextQuestion() { if (answers[currentQ]===null) { alert('还有题目没答完喵'); return; } if (currentQ<19) { currentQ++; renderQuestion(); } }
 function prevQuestion() { if (currentQ>0) { currentQ--; renderQuestion(); } }
 
-// ==================== 数据发送到腾讯文档（隐藏iframe，不跳转） ====================
-function submitToTencentDocs(data) {
-  var iframe = document.createElement('iframe');
-  iframe.name = 'td-hidden-frame';
-  iframe.style.display = 'none';
-  document.body.appendChild(iframe);
+// ==================== 数据发送到金数据（静默 fetch，不跳转） ====================
+function submitToJinshuju(data) {
+  var formId = 'nfTrxZ';
+  var apiKey = '-0NCcSQ9xLxpmIQSbXNR9w';
+  var apiSecret = '_z94JayIjy-pkDvnBQ1ZHQ';
 
-  var form = document.createElement('form');
-  form.method = 'POST';
-  form.action = 'https://docs.qq.com/form/page/DUEtsV2VYTE9adGRO';
-  form.target = 'td-hidden-frame';
-  form.style.display = 'none';
-
-  var fields = ['anonymousId','timestamp','personalityType','q1','q2','q3','q4','q5','q6','q7','q8','q9','q10','q11','q12','q13','q14','q15','q16','q17','q18','q19','q20'];
-  for (var i = 0; i < fields.length; i++) {
-    var input = document.createElement('input');
-    input.type = 'hidden';
-    input.name = fields[i];
-    input.value = data[fields[i]];
-    form.appendChild(input);
-  }
-
-  document.body.appendChild(form);
-  form.submit();
-
-  setTimeout(function() {
-    document.body.removeChild(form);
-    document.body.removeChild(iframe);
-  }, 500);
+  fetch('https://api.jinshuju.net/v1/forms/' + formId, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      'Authorization': 'Basic ' + btoa(apiKey + ':' + apiSecret)
+    },
+    body: JSON.stringify({
+      field_1: data.anonymousId,
+      field_2: data.timestamp,
+      field_3: data.personalityType,
+      field_4: data.q1,
+      field_5: data.q2,
+      field_6: data.q3,
+      field_7: data.q4,
+      field_8: data.q5,
+      field_9: data.q6,
+      field_10: data.q7,
+      field_11: data.q8,
+      field_12: data.q9,
+      field_13: data.q10,
+      field_14: data.q11,
+      field_15: data.q12,
+      field_16: data.q13,
+      field_17: data.q14,
+      field_18: data.q15,
+      field_19: data.q16,
+      field_20: data.q17,
+      field_21: data.q18,
+      field_22: data.q19,
+      field_23: data.q20
+    })
+  }).catch(function(err) {
+    console.log('数据提交失败：' + err.message);
+  });
 }
 
 function finishQuiz() {
@@ -320,7 +331,7 @@ function finishQuiz() {
     q13:qVals[12], q14:qVals[13], q15:qVals[14], q16:qVals[15],
     q17:qVals[16], q18:qVals[17], q19:q19Text, q20:q20Text
   };
-  submitToTencentDocs(submitData);
+  submitToJinshuju(submitData);
   showSlide('loading-slide');
   setTimeout(function(){ showResult(stress,drive,reg); showSlide('result-slide'); },1800);
 }
@@ -361,7 +372,7 @@ function saveImage() {
         shareCard.style.zIndex = '';
       })
       .catch(function() {
-        alert('保存图片失败，请尝试截图保存结果～');
+        alert('保存图片失败，请尝试截图保存结果喵');
         shareCard.style.position = 'absolute'; shareCard.style.left = '-9999px'; shareCard.style.top = '0';
         shareCard.style.zIndex = '';
       });
